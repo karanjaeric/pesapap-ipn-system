@@ -9,8 +9,10 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import java.time.LocalDate;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -19,24 +21,27 @@ import lombok.ToString;
  *
  * @author ekaranja
  */
-@Entity
-@Table(name = "students")
-@Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Data
 @ToString
-public class Student {
-
-    @Id
+@Entity
+@Table(name = "payments")
+public class Payment {
+     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long paymentID;
     private Long studentID;
-    private String firstname;
-    private String middlename;
-    private String surname;
-    private String othernames;
-    private String registrationNumber;
-    private LocalDate dateEnrolled;
-    private String course;
-    private boolean active;
+    private Long paymentMethodID;
+    private Long channelID;
+    private BigDecimal amount;
+    private LocalDateTime datePaid;
+    private String bankReferenceNumber;
+    private String sourceReferenceNumber;
+    private String sourceAccountNumber;
+    private String accountNumber;
+    private String billReferenceNumber;
+    private String narration;
 
 }

@@ -8,8 +8,6 @@ import com.familybank.pesapapipnsystem.dto.ResponseObject;
 import com.familybank.pesapapipnsystem.exceptions.ChannelAlreadyExistException;
 import com.familybank.pesapapipnsystem.model.Channel;
 import com.familybank.pesapapipnsystem.service.ChannelService;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,13 +20,13 @@ import org.springframework.web.bind.annotation.RestController;
  * @author ekaranja
  */
 @RestController
-@RequestMapping("v1/channel")
+@RequestMapping("/v1/channel")
 public class ChannelController {
 
     @Autowired
     private ChannelService channelService;
 
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity createChannel(@RequestBody Channel channel) {
         try {
             return channelService.createChannel(channel);

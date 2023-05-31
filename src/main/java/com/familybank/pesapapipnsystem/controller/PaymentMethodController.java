@@ -9,8 +9,6 @@ import com.familybank.pesapapipnsystem.exceptions.PaymentMethodAlreadyExist;
 import com.familybank.pesapapipnsystem.exceptions.PaymentMethodNotFoundException;
 import com.familybank.pesapapipnsystem.model.PaymentMethod;
 import com.familybank.pesapapipnsystem.service.PaymentMethodService;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,13 +23,13 @@ import org.springframework.web.bind.annotation.RestController;
  * @author ekaranja
  */
 @RestController
-@RequestMapping("v1/paymentmethod")
+@RequestMapping("/v1/paymentmethod")
 public class PaymentMethodController {
 
     @Autowired
     private PaymentMethodService paymentMethodService;
 
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity createPaymentMethod(@RequestBody PaymentMethod paymentMethod) {
         try {
             return paymentMethodService.createPaymentMethod(paymentMethod);
@@ -40,7 +38,7 @@ public class PaymentMethodController {
         }
     }
 
-    @GetMapping
+    @GetMapping("/retrieve")
     public ResponseEntity retrievePaymentMethod(@RequestParam(name = "code", required = true) String code) {
         try {
             return paymentMethodService.retrievePaymentMethod(code);

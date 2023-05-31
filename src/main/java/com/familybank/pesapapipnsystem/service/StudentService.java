@@ -10,6 +10,7 @@ import com.familybank.pesapapipnsystem.exceptions.StudentAlreadyExistException;
 import com.familybank.pesapapipnsystem.exceptions.StudentNotFoundException;
 import com.familybank.pesapapipnsystem.model.Student;
 import com.familybank.pesapapipnsystem.repository.StudentRepository;
+import io.micrometer.common.util.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -45,8 +46,12 @@ public class StudentService {
             log.error("Student Does Not Exist");
             throw new StudentNotFoundException("Student Does Not Exist");
         }
-        String studentName = student.getFirstname() + " " + student.getMiddlename() + " " + student.getSurname();
-        return ResponseEntity.status(200).body(new StudentDto(studentName, student.getRegistrationNumber()));
+        String firstName = student.getFirstname() == null ? "" : student.getFirstname();
+        String middleName = student.getMiddlename() == null ? "" : student.getMiddlename();
+        String othernames = student.getOthernames() == null ? "" : student.getOthernames();
+        String surname = student.getSurname() == null ? "" : student.getSurname();
+        String studentName = firstName + " " + middleName + " " + othernames + " " + surname;
+        return ResponseEntity.status(200).body(new StudentDto(studentName.replaceAll("\\s+", " "), student.getRegistrationNumber()));
 
     }
 
