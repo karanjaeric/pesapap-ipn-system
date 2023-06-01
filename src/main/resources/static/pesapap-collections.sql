@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 01, 2023 at 12:16 PM
+-- Generation Time: Jun 01, 2023 at 01:26 PM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.1.12
 
@@ -35,13 +35,6 @@ CREATE TABLE `channels` (
   `active` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `channels`
---
-
-INSERT INTO `channels` (`channelID`, `code`, `name`, `description`, `active`) VALUES
-(1, 'BNQ', 'Bankers Cheque', 'This Channel Supports deposits via Banker\'s Cheque', 1);
-
 -- --------------------------------------------------------
 
 --
@@ -56,13 +49,6 @@ CREATE TABLE `paymentmethods` (
   `active` tinyint(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `paymentmethods`
---
-
-INSERT INTO `paymentmethods` (`paymentMethodID`, `code`, `name`, `description`, `active`) VALUES
-(1, 'DTRF', 'Direct Transfer', 'Direct Transfer Payment Option', 1);
-
 -- --------------------------------------------------------
 
 --
@@ -71,7 +57,7 @@ INSERT INTO `paymentmethods` (`paymentMethodID`, `code`, `name`, `description`, 
 
 CREATE TABLE `payments` (
   `paymentID` bigint(20) NOT NULL,
-  `studentID` int(11) DEFAULT NULL,
+  `studentID` bigint(20) DEFAULT NULL,
   `amount` double(15,2) NOT NULL,
   `narration` varchar(255) DEFAULT NULL,
   `billReferenceNumber` varchar(20) DEFAULT NULL,
@@ -83,13 +69,6 @@ CREATE TABLE `payments` (
   `paymentMethodID` bigint(20) DEFAULT NULL,
   `channelID` bigint(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `payments`
---
-
-INSERT INTO `payments` (`paymentID`, `studentID`, `amount`, `narration`, `billReferenceNumber`, `accountNumber`, `datePaid`, `bankReferenceNumber`, `sourceReferenceNumber`, `sourceAccountNumber`, `paymentMethodID`, `channelID`) VALUES
-(4, 3, 11000.00, 'Tution Payment', 'P15/1461/2023', '1180196356857', '2023-05-31 17:18:51', 'TX1234568654', 'TX1234568654', '1180196356858', 1, 1);
 
 -- --------------------------------------------------------
 
@@ -108,13 +87,6 @@ CREATE TABLE `students` (
   `course` varchar(255) NOT NULL,
   `active` tinyint(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `students`
---
-
-INSERT INTO `students` (`studentID`, `firstname`, `middlename`, `surname`, `othernames`, `registrationNumber`, `dateEnrolled`, `course`, `active`) VALUES
-(3, 'Erick', 'Karanja', 'Muthike', NULL, 'P15/1461/2023', '2023-05-30', 'Computer Science', 1);
 
 --
 -- Indexes for dumped tables
@@ -136,7 +108,10 @@ ALTER TABLE `paymentmethods`
 -- Indexes for table `payments`
 --
 ALTER TABLE `payments`
-  ADD PRIMARY KEY (`paymentID`);
+  ADD PRIMARY KEY (`paymentID`),
+  ADD KEY `FK_Student_Payment` (`studentID`),
+  ADD KEY `FK_Channel_Payment` (`channelID`),
+  ADD KEY `FK_PaymentMethod_Payment` (`paymentMethodID`);
 
 --
 -- Indexes for table `students`
@@ -164,13 +139,25 @@ ALTER TABLE `paymentmethods`
 -- AUTO_INCREMENT for table `payments`
 --
 ALTER TABLE `payments`
-  MODIFY `paymentID` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `paymentID` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `students`
 --
 ALTER TABLE `students`
   MODIFY `studentID` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `payments`
+--
+ALTER TABLE `payments`
+  ADD CONSTRAINT `FK_Channel_Payment` FOREIGN KEY (`channelID`) REFERENCES `channels` (`channelID`),
+  ADD CONSTRAINT `FK_PaymentMethod_Payment` FOREIGN KEY (`paymentMethodID`) REFERENCES `paymentmethods` (`paymentMethodID`),
+  ADD CONSTRAINT `FK_Student_Payment` FOREIGN KEY (`studentID`) REFERENCES `students` (`studentID`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

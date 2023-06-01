@@ -23,10 +23,10 @@ import org.springframework.stereotype.Service;
 @Service
 @Slf4j
 public class StudentService {
-
+    
     @Autowired
     private StudentRepository studentRepository;
-
+    
     public ResponseEntity createStudent(Student student) throws StudentAlreadyExistException {
         log.info("Received Student Object {}", student.toString());
         if (studentRepository.findByRegistrationNumber(student.getRegistrationNumber()) != null) {
@@ -37,10 +37,11 @@ public class StudentService {
         student = studentRepository.save(student);
         log.info("Student created Successfully");
         return ResponseEntity.ok(new ResponseObject(student, "Student created Successfully"));
-
+        
     }
-
+    
     public ResponseEntity retrieveStudent(String registrationNumber) throws StudentNotFoundException {
+        log.info("Request to Retrieve Student {}", registrationNumber);
         Student student = studentRepository.findByRegistrationNumber(registrationNumber);
         if (student == null) {
             log.error("Student Does Not Exist");
@@ -52,7 +53,7 @@ public class StudentService {
         String surname = student.getSurname() == null ? "" : student.getSurname();
         String studentName = firstName + " " + middleName + " " + othernames + " " + surname;
         return ResponseEntity.status(200).body(new StudentDto(studentName.replaceAll("\\s+", " "), student.getRegistrationNumber()));
-
+        
     }
-
+    
 }
